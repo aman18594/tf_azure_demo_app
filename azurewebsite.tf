@@ -29,17 +29,17 @@ resource "azurerm_linux_web_app" "fe-webapp" {
 }
 
 # Define the data source to get information about the existing subnet
-data "azurerm_subnet" "fe-subnet" {
-  name                 = "fe-subnet"
-  virtual_network_name = azurerm_virtual_network.vnet.name
-  resource_group_name  = azurerm_resource_group.rg-1.name
-}
+# data "azurerm_subnet" "fe-subnet" {
+#   name                 = "fe-subnet"
+#   virtual_network_name = azurerm_virtual_network.vnet.name
+#   resource_group_name  = azurerm_resource_group.rg-1.name
+# }
 
-data "azurerm_subnet" "be-subnet" {
-  name                 = "be-subnet"
-  resource_group_name  = azurerm_resource_group.rg-1.name
-  virtual_network_name = azurerm_virtual_network.vnet.name
-}
+# data "azurerm_subnet" "be-subnet" {
+#   name                 = "be-subnet"
+#   resource_group_name  = azurerm_resource_group.rg-1.name
+#   virtual_network_name = azurerm_virtual_network.vnet.name
+# }
 
 # Backend
 resource "azurerm_linux_function_app" "be-fnapp" {
@@ -64,7 +64,7 @@ resource "azurerm_linux_function_app" "be-fnapp" {
   site_config {
 
     ip_restriction {
-      virtual_network_subnet_id = data.azurerm_subnet.fe-subnet.id
+      virtual_network_subnet_id = azurerm_subnet.fe-subnet.id
       priority                  = 100
       name                      = "Frontend access only"
     }
@@ -85,7 +85,7 @@ resource "azurerm_linux_function_app" "be-fnapp" {
 # vnet integration of backend functions
 resource "azurerm_app_service_virtual_network_swift_connection" "be-vnet-integration" {
   app_service_id = azurerm_linux_function_app.be-fnapp.id
-  subnet_id      = data.azurerm_subnet.be-subnet.id
+  subnet_id      = azurerm_subnet.be-subnet.id
   depends_on = [
     azurerm_linux_function_app.be-fnapp
   ]
@@ -94,7 +94,7 @@ resource "azurerm_app_service_virtual_network_swift_connection" "be-vnet-integra
 # vnet integration of frontend functions
 resource "azurerm_app_service_virtual_network_swift_connection" "fe-vnet-integration" {
   app_service_id = azurerm_linux_web_app.fe-webapp.id
-  subnet_id      = data.azurerm_subnet.fe-subnet.id
+  subnet_id      = azurerm_subnet.fe-subnet.id
 
   depends_on = [
     azurerm_linux_web_app.fe-webapp

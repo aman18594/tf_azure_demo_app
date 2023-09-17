@@ -5,7 +5,7 @@ resource "azurerm_service_plan" "fe-asp" {
   os_type             = "Linux"
   sku_name            = "B1"
   depends_on = [
-    data.azurerm_subnet.fe-subnet
+    azurerm_subnet.fe-subnet
   ]
 }
 
@@ -16,6 +16,6 @@ resource "azurerm_service_plan" "be-asp" {
   os_type             = "Linux"
   sku_name            = "B1"
   depends_on = [
-    data.azurerm_subnet.be-subnet
+    azurerm_subnet.be-subnet
   ]
 }

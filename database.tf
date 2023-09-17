@@ -37,7 +37,7 @@ resource "azurerm_mssql_server" "azuresql" {
 resource "azurerm_mssql_virtual_network_rule" "allow-be" {
   name      = var.azuresql_vnet_rule
   server_id = azurerm_mssql_server.azuresql.id
-  subnet_id = data.azurerm_subnet.be-subnet.id
+  subnet_id = azurerm_subnet.be-subnet.id
   depends_on = [
     azurerm_mssql_server.azuresql
   ]
