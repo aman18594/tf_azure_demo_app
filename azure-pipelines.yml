@@ -119,7 +119,7 @@ stages:
           - task: TerraformTaskV4@4
             inputs:
               command: "plan"
-              environmentServiceName: "$(SUBSCRIPTION_NAME)"
+              environmentServiceNameAzureRM: "$(SUBSCRIPTION_NAME)"
               publishPlanResults: "PlanResults"
               commandOptions: "-out=$(System.DefaultWorkingDirectory)/terraform.tfplan -detailed-exitcode"
             name: "plan"
