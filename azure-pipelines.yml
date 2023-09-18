@@ -26,12 +26,12 @@ stages:
         displayName: "Checkov > Pull, run and publish results of Checkov scan"
         steps:
           - bash: |
-              docker pull bridgecrew/checkov
+              sudo docker pull bridgecrew/checkov
             workingDirectory: $(System.DefaultWorkingDirectory)
             displayName: "Pull > bridgecrew/checkov"
 
           - bash: |
-              docker run --volume $(pwd):/tf bridgecrew/checkov --directory /tf --output junitxml --soft-fail > $(pwd)/CheckovReport.xml
+              sudo docker run --volume $(pwd):/tf bridgecrew/checkov --directory /tf --output junitxml --soft-fail > $(pwd)/CheckovReport.xml
             workingDirectory: $(System.DefaultWorkingDirectory)
             displayName: "Run > checkov"
 
