@@ -73,7 +73,7 @@ stages:
               backendAzureRmStorageAccountName: "$(tf_state_sa_name)"
               backendAzureRmStorageAccountSku: "$(tf_state_sku)"
               backendAzureRmContainerName: $(tf_state_container_name)
-              backendAzureRmKey: "terraform.tstate"
+              backendAzureRmKey: "terraform.tfstate"
             displayName: "Run > terraform init"
 
           - task: TerraformTaskV4@4
@@ -113,7 +113,7 @@ stages:
               backendAzureRmStorageAccountName: "$(tf_state_sa_name)"
               backendAzureRmStorageAccountSku: "$(tf_state_sku)"
               backendAzureRmContainerName: $(tf_state_container_name)
-              backendAzureRmKey: "terraform.tstate"
+              backendAzureRmKey: "terraform.tfstate"
             displayName: "Run > terraform init"
 
           - task: TerraformTaskV4@4
@@ -161,7 +161,7 @@ stages:
               backendAzureRmStorageAccountName: "$(tf_state_sa_name)"
               backendAzureRmStorageAccountSku: "$(tf_state_sku)"
               backendAzureRmContainerName: $(tf_state_container_name)
-              backendAzureRmKey: "terraform.tstate"
+              backendAzureRmKey: "terraform.tfstate"
             displayName: "Run > terraform init"
 
           - task: TerraformTaskV4@4
