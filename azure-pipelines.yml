@@ -167,5 +167,5 @@ stages:
           - task: TerraformTaskV4@4
             inputs:
               command: "apply"
-              environmentServiceName: "$(SUBSCRIPTION_NAME)"
+              environmentServiceNameAzureRM: "$(SUBSCRIPTION_NAME)"
             displayName: "Run > terraform apply"
