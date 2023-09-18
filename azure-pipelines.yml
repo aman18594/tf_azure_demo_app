@@ -97,7 +97,7 @@ stages:
       - job: "TerraformJobs"
         displayName: "Terraform > install, init & plan"
         steps:
-          - task: TerraformInstaller
+          - task: TerraformInstaller@1
             inputs:
               terraformVersion: "$(tf_version)"
             displayName: "Install > terraform"
