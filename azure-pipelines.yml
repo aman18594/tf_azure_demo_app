@@ -39,33 +39,35 @@ stages :
       - job: "runCheckov"
         displayName: "Checkov > Pull, run and publish results of Checkov scan"
         steps:
-        - task: Bash@3
-          displayName: Install checkov
-          inputs:
-            targetType: 'inline'
-            script: 'pip install checkov'
-            
-        - task: Bash@3
-          displayName: Checkov source code scan
-          continueOnError: true
-          inputs:
-            targetType: 'inline'
-            workingDirectory: $(working_directory)
-            script: 'checkov -d . -o junitxml > scan-result.xml --soft-fail'
-            
-        - task: PublishTestResults@2
-          displayName: Publish Test Result
-          inputs:
-            testResultsFormat: 'JUnit'
-            searchFolder: '$(working_directory)'
-            testResultsFiles: '**/*scan-result.xml'
-            mergeTestResults: false
-            testRunTitle: Terraform source code scan
-            failTaskOnFailedTests: false
-            publishRunAttachments: true
+        - bash: |
+            docker pull bridgecrew/checkov
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          displayName: "Pull > bridgecrew/checkov"
+         - bash: | 
+              docker run \
+                --volume $(pwd):/tf bridgecrew/checkov \
+                --directory /tf \
+                --output junitxml \
+                --soft-fail > $(pwd)/CheckovReport.xml              
+            workingDirectory: $(System.DefaultWorkingDirectory)
+            displayName: "Run > checkov"
+          - task: PublishTestResults@2
+            inputs:
+              testRunTitle: "Checkov Results"
+              failTaskOnFailedTests: true
+              testResultsFormat: "JUnit"
+              testResultsFiles: "CheckovReport.xml"
+              searchFolder: "$(System.DefaultWorkingDirectory)
+              mergeTestResults: false
+              testRunTitle: Terraform source code scan
+              failTaskOnFailedTests: false
+              publishRunAttachments: true
+              displayName: "Publish > Checkov scan results"
             
   - stage: validate
     displayName : 'Terraform Validate'
+    dependsOn:
+      - "runCheckov"
     jobs:
     - job: validate
       continueOnError: false
