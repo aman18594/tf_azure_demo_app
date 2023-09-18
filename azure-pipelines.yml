@@ -43,31 +43,29 @@ stages :
             docker pull bridgecrew/checkov
           workingDirectory: $(System.DefaultWorkingDirectory)
           displayName: "Pull > bridgecrew/checkov"
-         - bash: | 
-              docker run \
-                --volume $(pwd):/tf bridgecrew/checkov \
-                --directory /tf \
-                --output junitxml \
-                --soft-fail > $(pwd)/CheckovReport.xml              
-            workingDirectory: $(System.DefaultWorkingDirectory)
-            displayName: "Run > checkov"
-          - task: PublishTestResults@2
-            inputs:
-              testRunTitle: "Checkov Results"
-              failTaskOnFailedTests: true
-              testResultsFormat: "JUnit"
-              testResultsFiles: "CheckovReport.xml"
-              searchFolder: "$(System.DefaultWorkingDirectory)
-              mergeTestResults: false
-              testRunTitle: Terraform source code scan
-              failTaskOnFailedTests: false
-              publishRunAttachments: true
-              displayName: "Publish > Checkov scan results"
-            
+        - bash: | 
+            docker run \
+              --volume $(pwd):/tf bridgecrew/checkov \
+              --directory /tf \
+              --output junitxml \
+              --soft-fail > $(pwd)/CheckovReport.xml              
+          workingDirectory: $(System.DefaultWorkingDirectory)
+          displayName: "Run > checkov"
+        - task: PublishTestResults@2
+          displayName: "Publish Test Results"
+          inputs:
+            testRunTitle: "Checkov Results"
+            failTaskOnFailedTests: true
+            testResultsFormat: "JUnit"
+            testResultsFiles: "CheckovReport.xml"
+            searchFolder: "$(System.DefaultWorkingDirectory)
+            mergeTestResults: false
+            testRunTitle: Terraform source code scan
+            failTaskOnFailedTests: false
+            publishRunAttachments: true
+
   - stage: validate
     displayName : 'Terraform Validate'
-    dependsOn:
-      - "runCheckov"
     jobs:
     - job: validate
       continueOnError: false
