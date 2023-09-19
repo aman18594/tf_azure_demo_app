@@ -44,8 +44,7 @@ stages:
               searchFolder: "$(System.DefaultWorkingDirectory)"
             displayName: "Publish > Checkov scan results"
 
-  # Validate Terraform - uses the following ...
-  # https://marketplace.visualstudio.com/items?itemName=charleszipp.azure-pipelines-tasks-terraform
+  # Validate Terraform 
   ######################################################################
 
   - stage: "validateTerraform"
@@ -82,10 +81,7 @@ stages:
               environmentServiceName: "$(SUBSCRIPTION_NAME)"
             displayName: "Run > terraform validate"
 
-  # Plan Terraform - uses the following ...
-  # https://marketplace.visualstudio.com/items?itemName=charleszipp.azure-pipelines-tasks-terraform
-  # Will set some variables to trigger a terrafrom apply automatically
-  # if there are just changes or ask for approval if there are any
+  # Plan Terraform 
   # resouces which are being destroyed
   ######################################################################
 
@@ -125,8 +121,7 @@ stages:
             name: "plan"
             displayName: "Run > terraform plan"
 
-  # Auto Approval Terraform - uses the following ...
-  # https://marketplace.visualstudio.com/items?itemName=charleszipp.azure-pipelines-tasks-terraform
+  # Auto Approval Terraform 
   # Will run the terraform apply if there are are only changes and
   # nothing to be destroyed
   ######################################################################
@@ -135,6 +130,7 @@ stages:
     displayName: "Terraform - Auto Approval"
     dependsOn:
       - "planTerraform"
+    #condition for autoapprove only changes/addition
     #condition: |
     #  and
     #    (
